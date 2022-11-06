@@ -27,7 +27,7 @@ public class UsersService {
 	}
 
 	public User isDataExist(User user) {
-		return usersRepository.findByEmailAndMobNo(user.getEmail(), user.getMobNo());
+		return usersRepository.findByEmailAndPhoneNumberAndName(user.getEmail(), user.getPhoneNumber(), user.getName());
 	}
 
 	public Object getUserById(Long id) {
@@ -37,7 +37,7 @@ public class UsersService {
 	public User updateUser(User user, User newUser) {
 		newUser.setName(user.getName());
 		newUser.setEmail(user.getEmail());
-		newUser.setMobNo(user.getMobNo());
+		newUser.setPhoneNumber(user.getPhoneNumber());
 		newUser.setPassword(user.getPassword());
 		return usersRepository.save(newUser);
 	}

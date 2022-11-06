@@ -6,6 +6,8 @@ import cefi.model.User;
 
 public interface UsersRepository extends JpaRepository<User, Long> {
 
-	User findByEmailAndMobNo(String email, String mobNo);
+	User findByEmailAndPhoneNumber(String email, String phoneNumber);
+
+	User findByEmailAndPhoneNumberAndName(String email, String phoneNumber, String name);
 
 }

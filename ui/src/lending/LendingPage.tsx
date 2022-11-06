@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react'
 
-const LendingPage = () => {
+const LendingPage = (): JSX.Element => {
   return (
-   <p>Lending Page</p>
-  );
-};
+    <p>Lending Page</p>
+  )
+}
 
-export default LendingPage;
+export default LendingPage

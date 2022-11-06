@@ -28,7 +28,7 @@ public class BeanValidator {
 			if (constraintViolation.getPropertyPath().toString().equals("email")) {
 				arrayList.add(constraintViolation.getMessage());
 			}
-			if (constraintViolation.getPropertyPath().toString().equals("mobNo")) {
+			if (constraintViolation.getPropertyPath().toString().equals("phoneNumber")) {
 				arrayList.add(constraintViolation.getMessage());
 			}
 			if (constraintViolation.getPropertyPath().toString().equals("password")) {

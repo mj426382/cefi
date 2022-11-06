@@ -19,20 +19,20 @@ public class User {
 	private String name;
 	@NotEmpty(message = "Email must not be empty")
 	private String email;
-	@NotEmpty(message = "Mobile No must not be empty")
-	private String mobNo;
+	@NotEmpty(message = "Phone number must not be empty")
+	private String phoneNumber;
 	@NotEmpty(message = "Password must not be empty")
 	private String password;
 
 	public User() {
 	}
 
-	public User(long id, String name, String email, String mobNo, String password) {
+	public User(long id, String name, String email, String phoneNumber, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
-		this.mobNo = mobNo;
+		this.phoneNumber = phoneNumber;
 		this.password = password;
 	}
 
@@ -60,12 +60,12 @@ public class User {
 		this.email = email;
 	}
 
-	public String getMobNo() {
-		return mobNo;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
-	public void setMobNo(String mobNo) {
-		this.mobNo = mobNo;
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	public String getPassword() {

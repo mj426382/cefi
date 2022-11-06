@@ -43,7 +43,7 @@ public class UsersController {
 		if (existedUser == null) {
 			return new ResponseEntity<>(usersService.createUser(user), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("User already exist", HttpStatus.ALREADY_REPORTED);
+			return new ResponseEntity<>("User already exist", HttpStatus.CONFLICT);
 		}
 	}
 

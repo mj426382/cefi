@@ -1,25 +1,27 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Header from './header/Header';
-import LendingPage from './lending/LendingPage';
-import Login from './login/Login';
-import Register from './register/Register';
+import { FetchDataComponent } from './data/FetchDataComponent'
+import Header from './header/Header'
+import LendingPage from './lending/LendingPage'
+import Login from './login/Login'
+import Register from './register/Register'
+import Profile from './user/Profile'
 
-const App = () => {
+const App = (): JSX.Element => {
   return (
     <>
-      <Header />
       <BrowserRouter>
-        <Fragment>
-          <Routes>
-            <Route path="/" element={<LendingPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </Fragment>
+        <Header />
+        <FetchDataComponent />
+        <Routes>
+          <Route path='/' element={<LendingPage />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+        </Routes>
       </BrowserRouter>
     </>
   )
 }
 
-export default App;
+export default App
