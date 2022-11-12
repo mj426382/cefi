@@ -6,6 +6,7 @@ import { validateUsername, validatePassword, validatePhone, validateMail, valida
 import Axios from 'axios'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
+import { Navigate } from 'react-router'
 
 const Register = (): JSX.Element => {
   const [username, setUsername] = useState('')
@@ -26,6 +27,7 @@ const Register = (): JSX.Element => {
 
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const [isAcceptedCheckbox, setIsAcceptedCheckbox] = useState(false)
+  const [isRegisterSuccesfull, setIsRegisterSuccesfull] = useState(false)
 
   useEffect(() => {
     if (!isAnyStringEmpty([username, password, passwordAgain, phone, mail, captchaToken]) && isAcceptedCheckbox) {
@@ -92,6 +94,7 @@ const Register = (): JSX.Element => {
         window.alert('User created')
         localStorage.setItem('username', username)
         localStorage.setItem('password', password)
+        setIsRegisterSuccesfull(true)
       } catch (e) {
         setExistedUserError('User with these coordinates exists')
       }
@@ -100,6 +103,7 @@ const Register = (): JSX.Element => {
 
   return (
     <>
+      {isRegisterSuccesfull && <Navigate to='/' />}
       <div>
         <TextField
           style={{ justifyContent: 'center', margin: 'auto', display: 'flex', marginTop: '0.5vw', width: '20vw' }}

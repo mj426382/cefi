@@ -11,7 +11,6 @@ export const FetchDataComponent = (): JSX.Element => {
 
   const fetchUserData = async (): Promise<void> => {
     if (token !== null) {
-      console.log({ token })
       const userDataResponse = await Axios.get('http://localhost:3000/user/current', {
         headers: {
           Authorization: 'Bearer ' + token
@@ -28,7 +27,7 @@ export const FetchDataComponent = (): JSX.Element => {
   }
 
   useEffect(() => {
-    console.log('fetched')
+    console.log({ token })
     void fetchUserData()
   }, [token, username, password])
 
