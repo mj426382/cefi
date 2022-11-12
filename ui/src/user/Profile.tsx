@@ -5,7 +5,11 @@ const Profile = (): JSX.Element => {
   const userState = useSelector((state: any) => state.user)
 
   return (
-    <p>{userState.name}</p>
+    <>
+      <p>{userState.username}</p>
+      <p>{userState.phoneNumber}</p>
+      <p>{userState.email}</p>
+    </>
   )
 }
 

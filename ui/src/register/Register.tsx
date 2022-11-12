@@ -1,9 +1,11 @@
-import { Button, TextField } from '@mui/material'
+import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material'
 import React, { useState, useCallback, useEffect } from 'react'
 import PasswordStrengthBar from 'react-password-strength-bar'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { validateUsername, validatePassword, validatePhone, validateMail, validatePasswords, isStringNullOrEmpty, isAnyStringEmpty } from './validateRegister'
 import Axios from 'axios'
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 const Register = (): JSX.Element => {
   const [username, setUsername] = useState('')
@@ -23,14 +25,47 @@ const Register = (): JSX.Element => {
   const [existedUserError, setExistedUserError] = useState<string | null>(null)
 
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const [isAcceptedCheckbox, setIsAcceptedCheckbox] = useState(false)
 
   useEffect(() => {
-    if (!isAnyStringEmpty([username, password, passwordAgain, phone, mail, captchaToken])) {
+    if (!isAnyStringEmpty([username, password, passwordAgain, phone, mail, captchaToken]) && isAcceptedCheckbox) {
       setIsActiveButton(true)
     } else {
       setIsActiveButton(false)
     }
-  }, [username, password, passwordAgain, phone, mail, captchaToken])
+  }, [username, password, passwordAgain, phone, mail, captchaToken, isAcceptedCheckbox])
+
+  const handleChangeUsername = async (username: string): Promise<void> => {
+    setUsername(username)
+    const response = await Axios.get<boolean>('http://localhost:3000/user/username-exists/' + username)
+
+    if (response.data) {
+      setUsernameError('User with this username exists')
+    } else {
+      setUsernameError(null)
+    }
+    setExistedUserError(null)
+  }
+
+  const handlePhoneNumberBlur = async (phoneNumber: string): Promise<void> => {
+    const response = await Axios.get<boolean>('http://localhost:3000/user/phone-number-exists/' + phoneNumber)
+
+    if (response.data) {
+      setPhoneError('Phone number exists')
+    } else {
+      setPhoneError(null)
+    }
+  }
+
+  const handleEmailBlur = async (email: string): Promise<void> => {
+    const response = await Axios.get<boolean>('http://localhost:3000/user/email-exists/' + email)
+
+    if (response.data) {
+      setMailError('Email exists')
+    } else {
+      setMailError(null)
+    }
+  }
 
   const handleRegister = useCallback(async () => {
     setUsernameError(null)
@@ -46,13 +81,18 @@ const Register = (): JSX.Element => {
     validatePhone(phone, setPhoneError) &&
     validateMail(mail, setMailError) &&
     validatePasswords(password, passwordAgain, setPasswordMatchError)) {
-      const response = await Axios.post('http://localhost:8080/user', {
-        name: username,
-        password,
-        phoneNumber: phone,
-        email: mail
-      })
-      if (response.status !== 201) {
+      try {
+        await Axios.post('http://localhost:3000/auth/register', {
+          username,
+          password,
+          phoneNumber: phone,
+          email: mail,
+          captchaToken
+        })
+        window.alert('User created')
+        localStorage.setItem('username', username)
+        localStorage.setItem('password', password)
+      } catch (e) {
         setExistedUserError('User with these coordinates exists')
       }
     }
@@ -62,14 +102,14 @@ const Register = (): JSX.Element => {
     <>
       <div>
         <TextField
-          style={{ justifyContent: 'center', margin: 'auto', display: 'flex', marginTop: '2vw', width: '20vw' }}
+          style={{ justifyContent: 'center', margin: 'auto', display: 'flex', marginTop: '0.5vw', width: '20vw' }}
           error={!isStringNullOrEmpty(usernameError) || !isStringNullOrEmpty(existedUserError)}
           id='filled-error'
           label='Login'
           variant='filled'
           helperText={existedUserError ?? usernameError}
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => void handleChangeUsername(e.target.value)}
         />
         <div style={{ display: 'flex', marginTop: '1vw' }}>
           <TextField
@@ -83,7 +123,7 @@ const Register = (): JSX.Element => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <PasswordStrengthBar password={password ?? ''} style={{ marginRight: '35vw', marginTop: '1vw' }} />
+          <PasswordStrengthBar password={password} style={{ marginRight: '35vw', marginTop: '1vw' }} />
         </div>
         <div style={{ display: 'flex', marginTop: '1vw' }}>
           <TextField
@@ -97,9 +137,9 @@ const Register = (): JSX.Element => {
             value={passwordAgain}
             onChange={(e) => setPasswordAgain(e.target.value)}
           />
-          <PasswordStrengthBar password={passwordAgain ?? ''} style={{ marginRight: '35vw', marginTop: '1vw' }} />
+          <PasswordStrengthBar password={passwordAgain} style={{ marginRight: '35vw', marginTop: '1vw' }} />
         </div>
-        <TextField
+        {/* <TextField
           style={{ justifyContent: 'center', margin: 'auto', display: 'flex', width: '20vw', marginTop: '1vw' }}
           error={!isStringNullOrEmpty(phoneError)}
           id='filled-error'
@@ -108,7 +148,7 @@ const Register = (): JSX.Element => {
           helperText={phoneError}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-        />
+        /> */}
         <TextField
           style={{ justifyContent: 'center', margin: 'auto', display: 'flex', width: '20vw', marginTop: '1vw' }}
           error={!isStringNullOrEmpty(mailError)}
@@ -117,14 +157,37 @@ const Register = (): JSX.Element => {
           variant='filled'
           helperText={mailError}
           value={mail}
-          onChange={(e) => setMail(e.target.value)}
+          onBlur={(e) => void handleEmailBlur(e.target.value)}
+          onChange={(e) => {
+            setMailError(null)
+            setMail(e.target.value)
+          }}
         />
+        <div
+          style={{ justifyContent: 'center', margin: 'auto', display: 'flex', width: '24vw', marginTop: '1vw' }}
+        >
+          <PhoneInput
+            placeholder='Enter phone number'
+            inputClass='material'
+            containerClass='bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal'
+            value={phone}
+            onBlur={(e) => void handlePhoneNumberBlur(e.target.value)}
+            onChange={phone => {
+              setPhoneError(null)
+              setPhone(phone)
+            }}
+          />
+        </div>
         <ReCAPTCHA
           style={{ justifyContent: 'center', margin: 'auto', display: 'flex', width: '20vw', marginTop: '1vw' }}
           sitekey='6LelLeMiAAAAAITsAnvxxULmIva0mBQB3fA49dwd'
           onChange={(token) => setCaptchaToken(token)}
         />
       </div>
+      <FormControlLabel
+        style={{ justifyContent: 'center', margin: 'auto', display: 'flex', marginTop: '2vw', width: '20vw' }}
+        control={<Checkbox checked={isAcceptedCheckbox} onClick={() => setIsAcceptedCheckbox(prev => !prev)} />} label='I accept the CeFi rules'
+      />
       <Button
         style={{ justifyContent: 'center', margin: 'auto', display: 'flex', marginTop: '1vw', width: '10vw' }}
         variant='outlined'

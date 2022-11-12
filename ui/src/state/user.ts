@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface UserState {
-  name: string | null
-  mail: string | null
-  phone: string | null
+  username: string | null
+  email: string | null
+  phoneNumber: string | null
 }
 
 const initialState: UserState = {
-  name: null,
-  mail: null,
-  phone: null
+  username: null,
+  email: null,
+  phoneNumber: null
 }
 
 export const userSlice = createSlice({
@@ -17,11 +17,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     set: (state: UserState, action: PayloadAction<UserState>) => {
-      const { name, phone, mail } = action.payload
-      state.name = name
-      state.phone = phone
-      state.mail = mail
-      console.log({ state })
+      const { username, phoneNumber, email } = action.payload
+      state.username = username
+      state.phoneNumber = phoneNumber
+      state.email = email
     }
   }
 })
