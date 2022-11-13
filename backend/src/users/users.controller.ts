@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, UseGuards } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard'
 import { CurrentUser } from 'src/auth/current-user'
@@ -9,36 +9,36 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll () {
-    return this.usersService.findAll()
+  async findAll (): Promise<any> {
+    return await this.usersService.findAll()
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne (@Param('id') id: string) {
+  async findOne (@Param('id') id: string): Promise<any> {
     return this.usersService.findOne(+id)
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('current')
-  findCurrent (@CurrentUser() user: any) {
+  async findCurrent (@CurrentUser() user: any): Promise<any> {
     return user
   }
 
   @Get('/username-exists/:username')
-  async findByUsername (@Param('username') username: string) {
+  async findByUsername (@Param('username') username: string): Promise<boolean> {
     const user = await this.usersService.findByUsername(username)
     return user !== null
   }
 
   @Get('/email-exists/:email')
-  async findByEmail (@Param('email') email: string) {
+  async findByEmail (@Param('email') email: string): Promise<boolean> {
     const user = await this.usersService.findByEmail(email)
     return user !== null
   }
 
   @Get('/phone-number-exists/:phoneNumber')
-  async findByPhoneNumber (@Param('phoneNumber') phoneNumber: string) {
+  async findByPhoneNumber (@Param('phoneNumber') phoneNumber: string): Promise<boolean> {
     const user = await this.usersService.findByPhoneNumber(phoneNumber)
     return user !== null
   }

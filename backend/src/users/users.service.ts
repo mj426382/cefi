@@ -7,40 +7,40 @@ import { UpdateUserDto } from './dto/update-user.dto'
 export class UsersService {
   constructor (private readonly prisma: PrismaService) {}
 
-  create (createUserDto: CreateUserDto) {
+  async create (createUserDto: CreateUserDto): Promise<any> {
     const { username, password, phoneNumber, email } = createUserDto
-    return this.prisma.user.create({
+    return await this.prisma.user.create({
       data: {
         username,
         password,
         phoneNumber,
-        email,
+        email
       }
     })
   }
 
-  findAll () {
-    return this.prisma.user.findMany({})
+  async findAll (): Promise<any> {
+    return await this.prisma.user.findMany({})
   }
 
-  findByUsername (username: string) {
-    return this.prisma.user.findFirst({
+  async findByUsername (username: string): Promise<any> {
+    return await this.prisma.user.findFirst({
       where: {
         username
       }
     })
   }
 
-  findByEmail (email: string) {
-    return this.prisma.user.findFirst({
+  async findByEmail (email: string): Promise<any> {
+    return await this.prisma.user.findFirst({
       where: {
         email
       }
     })
   }
 
-  findByPhoneNumber (phoneNumber: string) {
-    return this.prisma.user.findFirst({
+  async findByPhoneNumber (phoneNumber: string): Promise<any> {
+    return await this.prisma.user.findFirst({
       where: {
         phoneNumber
       }
@@ -53,15 +53,15 @@ export class UsersService {
     })
   }
 
-  findOne (id: number) {
+  findOne (id: number): string {
     return `This action returns a #${id} user`
   }
 
-  update (id: number, updateUserDto: UpdateUserDto) {
+  update (id: number, updateUserDto: UpdateUserDto): string {
     return `This action updates a #${id} user`
   }
 
-  remove (id: number) {
+  remove (id: number): string {
     return `This action removes a #${id} user`
   }
 }

@@ -22,7 +22,7 @@ async function bootstrap (): Promise<void> {
   SwaggerModule.setup('api', app, document)
 
   app.enableCors({
-    
+
   })
   await app.listen(3000)
 }

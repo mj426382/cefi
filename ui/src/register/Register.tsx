@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material'
+import { Alert, Button, Checkbox, FormControlLabel, TextField } from '@mui/material'
 import React, { useState, useCallback, useEffect } from 'react'
 import PasswordStrengthBar from 'react-password-strength-bar'
 import ReCAPTCHA from 'react-google-recaptcha'
@@ -50,7 +50,9 @@ const Register = (): JSX.Element => {
   }
 
   const handlePhoneNumberBlur = async (phoneNumber: string): Promise<void> => {
+    console.log({ phoneNumber })
     const response = await Axios.get<boolean>('http://localhost:3000/user/phone-number-exists/' + phoneNumber)
+    console.log({ response })
 
     if (response.data) {
       setPhoneError('Phone number exists')
@@ -113,7 +115,7 @@ const Register = (): JSX.Element => {
           variant='filled'
           helperText={existedUserError ?? usernameError}
           value={username}
-          onChange={(e) => void handleChangeUsername(e.target.value)}
+          onChange={(e) => { void handleChangeUsername(e.target.value) }}
         />
         <div style={{ display: 'flex', marginTop: '1vw' }}>
           <TextField
@@ -143,16 +145,6 @@ const Register = (): JSX.Element => {
           />
           <PasswordStrengthBar password={passwordAgain} style={{ marginRight: '35vw', marginTop: '1vw' }} />
         </div>
-        {/* <TextField
-          style={{ justifyContent: 'center', margin: 'auto', display: 'flex', width: '20vw', marginTop: '1vw' }}
-          error={!isStringNullOrEmpty(phoneError)}
-          id='filled-error'
-          label='Phone number'
-          variant='filled'
-          helperText={phoneError}
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        /> */}
         <TextField
           style={{ justifyContent: 'center', margin: 'auto', display: 'flex', width: '20vw', marginTop: '1vw' }}
           error={!isStringNullOrEmpty(mailError)}
@@ -161,7 +153,7 @@ const Register = (): JSX.Element => {
           variant='filled'
           helperText={mailError}
           value={mail}
-          onBlur={(e) => void handleEmailBlur(e.target.value)}
+          onBlur={(e) => { void handleEmailBlur(e.target.value) }}
           onChange={(e) => {
             setMailError(null)
             setMail(e.target.value)
@@ -175,12 +167,13 @@ const Register = (): JSX.Element => {
             inputClass='material'
             containerClass='bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal'
             value={phone}
-            onBlur={(e) => void handlePhoneNumberBlur(e.target.value)}
+            onBlur={(e) => { void handlePhoneNumberBlur(e.target.value) }}
             onChange={phone => {
               setPhoneError(null)
               setPhone(phone)
             }}
           />
+          {phoneError !== null && <Alert severity='error'>{phoneError}</Alert>}
         </div>
         <ReCAPTCHA
           style={{ justifyContent: 'center', margin: 'auto', display: 'flex', width: '20vw', marginTop: '1vw' }}
@@ -195,7 +188,7 @@ const Register = (): JSX.Element => {
       <Button
         style={{ justifyContent: 'center', margin: 'auto', display: 'flex', marginTop: '1vw', width: '10vw' }}
         variant='outlined'
-        onClick={handleRegister}
+        onClick={() => { void handleRegister() }}
         disabled={!isActiveButton}
       >Register
       </Button>

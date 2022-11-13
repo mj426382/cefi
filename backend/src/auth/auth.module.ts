@@ -8,7 +8,7 @@ import { AuthController } from './auth.controller'
 import { UsersService } from '../users/users.service'
 import { PrismaService } from '../prisma/prisma.service'
 import * as dotenv from 'dotenv'
-import { HttpModule, HttpService } from '@nestjs/axios'
+import { HttpModule } from '@nestjs/axios'
 dotenv.config()
 
 @Module({

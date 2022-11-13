@@ -12,13 +12,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest:
             ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: true,
-      secretOrKey: `${process.env.SECRETKEY}`
+      secretOrKey: `${process.env.SECRETKEY ?? ''}`
     })
   }
 
   async validate (payload: JwtPayload): Promise<any> {
     const user = await this.authService.validateUser(payload)
-    if (!user) {
+    if (user !== null) {
       throw new HttpException('Invalid token',
         HttpStatus.UNAUTHORIZED)
     }

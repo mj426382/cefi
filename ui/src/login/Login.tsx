@@ -14,7 +14,6 @@ const Login = (): JSX.Element => {
   const [isRegisterRedirect, setIsRegisterRedirect] = useState(false)
   const [isLoginSuccesfull, setIsLoginSuccesfull] = useState(false)
 
-
   useEffect(() => {
     if (!isAnyStringEmpty([username, password])) {
       setIsActiveButton(true)
@@ -60,7 +59,7 @@ const Login = (): JSX.Element => {
       <div>
         <TextField
           style={{ justifyContent: 'center', margin: 'auto', display: 'flex', marginTop: '10vw', width: '20vw' }}
-          error={!!usernameError}
+          error={usernameError !== null}
           label='Login'
           variant='filled'
           helperText={usernameError}
@@ -68,13 +67,12 @@ const Login = (): JSX.Element => {
           onChange={(e: any) => {
             setUsernameError(null)
             setUsername(e.target.value)
-          }
-          }
-          onBlur={(e) => handleChangeUsername(e.target.value)}
+          }}
+          onBlur={(e) => { void handleChangeUsername(e.target.value) }}
         />
         <TextField
           style={{ justifyContent: 'center', margin: 'auto', display: 'flex', marginTop: 'auto', width: '20vw' }}
-          error={!!passwordError}
+          error={passwordError !== null}
           label='Password'
           variant='filled'
           helperText={passwordError}
@@ -93,7 +91,7 @@ const Login = (): JSX.Element => {
         disabled={!isActiveButton}
         style={{ justifyContent: 'center', margin: 'auto', display: 'flex', marginTop: 'auto', width: '10vw' }}
         variant='outlined'
-        onClick={handleLogIn}
+        onClick={() => { void handleLogIn() }}
       >Login
       </Button>
     </>
