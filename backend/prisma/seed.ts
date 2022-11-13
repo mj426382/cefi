@@ -9,11 +9,35 @@ async function main() {
         username: 'manus1235',
         email: 'j.mateusz@op.pl',
         phoneNumber: '+48533689329',
-        password: 'password',
+        password: '$2b$10$U8cx.ZyqSKbCp.34SeluIevFTEhVqJOYTZ1nFyZFKInyXbfTgsVZK',
     },
     update: {},
     });
-  console.log({ user });
+  const currency = await prisma.currency.upsert({
+    where: {
+      symbol: 'PLN'
+    },
+    create: {
+      symbol: 'PLN',
+      name: 'POLISH ZLOTY',
+    },
+    update: {}
+  })
+  const userCurrency = await prisma.userCurrencyBalance.upsert({
+    where: {
+      currencyId_userId: {
+        currencyId: currency.id,
+        userId: user.id,
+      }
+    },
+    create: {
+      currencyId: currency.id,
+      userId: user.id,
+      balance: 10000,
+    },
+    update: {},
+  })
+  console.log({ user, currency, userCurrency });
 }
 
 main()

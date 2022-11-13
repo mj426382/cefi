@@ -2,7 +2,7 @@ import { Controller, Get, Param, UseGuards } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard'
 import { CurrentUser } from 'src/auth/current-user'
-import { User } from '@prisma/client'
+import { User, UserCurrencyBalance } from '@prisma/client';
 
 @Controller('user')
 export class UsersController {
@@ -10,8 +10,12 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('current')
-  async findCurrent (@CurrentUser() user: User): Promise<User> {
-    return user
+  async findCurrent (@CurrentUser() user: User): Promise<User & { balances: UserCurrencyBalance[]}> {
+    const balances = await this.usersService.getUserCurrencyBalances(user.id);
+    return {
+      ...user,
+      balances,
+    }
   }
 
   @Get('/username-exists/:username')

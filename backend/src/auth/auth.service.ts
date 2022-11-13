@@ -60,7 +60,6 @@ export class AuthService {
       throw new HttpException('INVALID_PASSWORD',
         HttpStatus.UNAUTHORIZED)
     }
-
     return this.createToken({
       login: loginUserDto.username
     })
@@ -78,6 +77,7 @@ export class AuthService {
   async validateUser (payload: JwtPayload): Promise<User> {
     const user = await this.usersService.findByPayload(payload)
     if (user === null || user === undefined) {
+
       throw new HttpException('INVALID_TOKEN',
         HttpStatus.UNAUTHORIZED)
     }

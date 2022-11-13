@@ -1,15 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+interface CurrencyBalance {
+  balance: number
+  currencyId: number
+  currency: {
+    symbol: string
+    name: string
+  }
+}
+
 export interface UserState {
   username: string | null
   email: string | null
   phoneNumber: string | null
+  balances: CurrencyBalance[]
 }
 
 const initialState: UserState = {
   username: null,
   email: null,
-  phoneNumber: null
+  phoneNumber: null,
+  balances: [],
 }
 
 export const userSlice = createSlice({
@@ -17,10 +28,11 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     set: (state: UserState, action: PayloadAction<UserState>) => {
-      const { username, phoneNumber, email } = action.payload
+      const { username, phoneNumber, email, balances } = action.payload
       state.username = username
       state.phoneNumber = phoneNumber
       state.email = email
+      state.balances = balances
     }
   }
 })

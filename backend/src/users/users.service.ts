@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common'
-import { User } from '@prisma/client'
+import { User, UserCurrencyBalance } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { BalanceService } from '../balance/balance.service';
 
 @Injectable()
 export class UsersService {
-  constructor (private readonly prisma: PrismaService) {}
+  constructor (private readonly prisma: PrismaService,
+    private readonly balanceService: BalanceService) {}
 
-  async create (createUserDto: CreateUserDto): Promise<User> {
+  create (createUserDto: CreateUserDto): Promise<User> {
     const { username, password, phoneNumber, email } = createUserDto
-    return await this.prisma.user.create({
+    return this.prisma.user.create({
       data: {
         username,
         password,
@@ -20,49 +22,64 @@ export class UsersService {
     })
   }
 
-  async findAll (): Promise<User[]> {
-    return await this.prisma.user.findMany({})
+  findAll (): Promise<User[]> {
+    return this.prisma.user.findMany({})
   }
 
-  async findByUsername (username: string): Promise<User | null> {
-    return await this.prisma.user.findFirst({
+  findByUsername (username: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
       where: {
         username
       }
     })
   }
 
-  async findByEmail (email: string): Promise<User | null> {
-    return await this.prisma.user.findFirst({
+  findByEmail (email: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
       where: {
         email
       }
     })
   }
 
-  async findByPhoneNumber (phoneNumber: string): Promise<User | null> {
-    return await this.prisma.user.findFirst({
+  findByPhoneNumber (phoneNumber: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
       where: {
         phoneNumber
       }
     })
   }
 
-  async findByPayload ({ login: username }): Promise<User | null> {
-    return await this.prisma.user.findFirst({
+  findByPayload ({ login: username }): Promise<User | null> {
+    return this.prisma.user.findFirst({
       where: { username }
     })
   }
 
-  findOne (id: number): string {
-    return `This action returns a #${id} user`
+  update (id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const { username, password, phoneNumber, email } = updateUserDto
+    return this.prisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        username,
+        password,
+        phoneNumber,
+        email
+      }
+    })  
   }
 
-  update (id: number, updateUserDto: UpdateUserDto): string {
-    return `This action updates a #${id} user`
+  remove (id: number): Promise<User> {
+    return this.prisma.user.delete({
+      where: {
+        id,
+      },
+    })
   }
 
-  remove (id: number): string {
-    return `This action removes a #${id} user`
+  getUserCurrencyBalances(id: number): Promise<UserCurrencyBalance[]> {
+    return this.balanceService.getUserCurrencyBalances(id);
   }
 }

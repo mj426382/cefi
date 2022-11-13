@@ -8,11 +8,15 @@ const Profile = (): JSX.Element => {
 
   return userState.username !== null
     ? (
-      <>
+      <div>
         <p>{userState.username}</p>
+        <br />
         <p>{userState.phoneNumber}</p>
+        <br />
         <p>{userState.email}</p>
-      </>
+        <br />
+        {userState.balances.map((balance) => <>{`${balance.currency.name}: ${balance.balance}`}</>)}
+      </div>
       )
     : <Navigate to='/login' />
 }

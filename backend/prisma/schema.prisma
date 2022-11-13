@@ -11,10 +11,28 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  username    String   @unique
-  password    String
-  email       String   @unique
-  phoneNumber String   @unique
-  updatedAt   DateTime @updatedAt
+  id                   Int                   @id @default(autoincrement())
+  username             String                @unique
+  password             String
+  email                String                @unique
+  phoneNumber          String                @unique
+  updatedAt            DateTime              @updatedAt
+  UserCurrencyBalances UserCurrencyBalance[]
+}
+
+model Currency {
+  id                   Int                   @id @default(autoincrement())
+  symbol               String                @unique
+  name                 String                @unique
+  UserCurrencyBalances UserCurrencyBalance[]
+}
+
+model UserCurrencyBalance {
+  currency   Currency @relation(fields: [currencyId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  currencyId Int
+  userId     Int
+  balance    Int
+
+  @@id([currencyId, userId])
 }

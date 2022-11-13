@@ -9,6 +9,7 @@ import { UsersService } from '../users/users.service'
 import { PrismaService } from '../prisma/prisma.service'
 import * as dotenv from 'dotenv'
 import { HttpModule } from '@nestjs/axios'
+import { BalanceService } from '../balance/balance.service';
 dotenv.config()
 
 @Module({
@@ -28,7 +29,7 @@ dotenv.config()
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, UsersService, JwtStrategy, PrismaService],
+  providers: [AuthService, UsersService, JwtStrategy, PrismaService, BalanceService],
   exports: [
     PassportModule,
     JwtModule
