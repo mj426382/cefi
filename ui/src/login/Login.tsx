@@ -64,7 +64,7 @@ const Login = (): JSX.Element => {
           variant='filled'
           helperText={usernameError}
           value={username}
-          onChange={(e: any) => {
+          onChange={(e) => {
             setUsernameError(null)
             setUsername(e.target.value)
           }}

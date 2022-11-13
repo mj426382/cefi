@@ -2,26 +2,15 @@ import { Controller, Get, Param, UseGuards } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard'
 import { CurrentUser } from 'src/auth/current-user'
+import { User } from '@prisma/client'
 
 @Controller('user')
 export class UsersController {
   constructor (private readonly usersService: UsersService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  async findAll (): Promise<any> {
-    return await this.usersService.findAll()
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  async findOne (@Param('id') id: string): Promise<any> {
-    return this.usersService.findOne(+id)
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Get('current')
-  async findCurrent (@CurrentUser() user: any): Promise<any> {
+  async findCurrent (@CurrentUser() user: User): Promise<User> {
     return user
   }
 

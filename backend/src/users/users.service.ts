@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { User } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -7,7 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 export class UsersService {
   constructor (private readonly prisma: PrismaService) {}
 
-  async create (createUserDto: CreateUserDto): Promise<any> {
+  async create (createUserDto: CreateUserDto): Promise<User> {
     const { username, password, phoneNumber, email } = createUserDto
     return await this.prisma.user.create({
       data: {
@@ -19,11 +20,11 @@ export class UsersService {
     })
   }
 
-  async findAll (): Promise<any> {
+  async findAll (): Promise<User[]> {
     return await this.prisma.user.findMany({})
   }
 
-  async findByUsername (username: string): Promise<any> {
+  async findByUsername (username: string): Promise<User | null> {
     return await this.prisma.user.findFirst({
       where: {
         username
@@ -31,7 +32,7 @@ export class UsersService {
     })
   }
 
-  async findByEmail (email: string): Promise<any> {
+  async findByEmail (email: string): Promise<User | null> {
     return await this.prisma.user.findFirst({
       where: {
         email
@@ -39,7 +40,7 @@ export class UsersService {
     })
   }
 
-  async findByPhoneNumber (phoneNumber: string): Promise<any> {
+  async findByPhoneNumber (phoneNumber: string): Promise<User | null> {
     return await this.prisma.user.findFirst({
       where: {
         phoneNumber
@@ -47,9 +48,9 @@ export class UsersService {
     })
   }
 
-  async findByPayload ({ login }: any): Promise<any> {
+  async findByPayload ({ login: username }): Promise<User | null> {
     return await this.prisma.user.findFirst({
-      where: { username: login }
+      where: { username }
     })
   }
 

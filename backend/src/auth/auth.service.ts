@@ -46,7 +46,7 @@ export class AuthService {
     return status
   }
 
-  async login (loginUserDto: LoginUserDto): Promise<any> {
+  async login (loginUserDto: LoginUserDto): Promise<LoginStatus> {
     const user = await this.usersService.findByUsername(loginUserDto.username)
 
     if (user === null) {
@@ -61,16 +61,12 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED)
     }
 
-    const token = this.createToken({
+    return this.createToken({
       login: loginUserDto.username
     })
-
-    return {
-      ...token
-    }
   }
 
-  private createToken ({ login }): any {
+  private createToken ({ login }): LoginStatus {
     const user: JwtPayload = { login }
     const Authorization = this.jwtService.sign(user)
     return {
@@ -79,7 +75,7 @@ export class AuthService {
     }
   }
 
-  async validateUser (payload: JwtPayload): Promise<any> {
+  async validateUser (payload: JwtPayload): Promise<User> {
     const user = await this.usersService.findByPayload(payload)
     if (user === null || user === undefined) {
       throw new HttpException('INVALID_TOKEN',
@@ -89,6 +85,10 @@ export class AuthService {
   }
 }
 
+export interface LoginStatus {
+  Authorization: string
+  expiresIn: number
+}
 export interface RegistrationStatus {
   success: boolean
   message: string

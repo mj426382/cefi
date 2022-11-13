@@ -44,7 +44,8 @@
     "lint": "ts-standard \"src/**/**/*.{tsx,ts}\"",
     "lint:fix": "ts-standard \"src/**/**/*.{tsx,ts}\" --fix",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "migrate:make": "npx prisma migrate dev --name"
   },
   "eslintConfig": {
     "extends": [

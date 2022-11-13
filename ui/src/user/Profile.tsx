@@ -1,9 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router'
+import { State } from '../state/type/state'
 
 const Profile = (): JSX.Element => {
-  const userState = useSelector((state: any) => state.user)
+  const userState = useSelector((state: State) => state.user)
 
   return userState.username !== null
     ? (

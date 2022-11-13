@@ -3,6 +3,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
 import { AuthService } from './auth.service'
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import * as dotenv from 'dotenv'
+import { User } from '@prisma/client'
 dotenv.config()
 
 @Injectable()
@@ -16,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  async validate (payload: JwtPayload): Promise<any> {
+  async validate (payload: JwtPayload): Promise<User> {
     const user = await this.authService.validateUser(payload)
     if (user !== null) {
       throw new HttpException('Invalid token',

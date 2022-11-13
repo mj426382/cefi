@@ -5,7 +5,7 @@ import {
   HttpStatus,
   Post
 } from '@nestjs/common'
-import { AuthService, RegistrationStatus } from './auth.service'
+import { AuthService, RegistrationStatus, LoginStatus } from './auth.service'
 import { ApiTags } from '@nestjs/swagger'
 import { LoginUserDto } from './dto/login-user-dto'
 import { RegisterUserDto } from './dto/register-user-dto'
@@ -31,7 +31,7 @@ export class AuthController {
 
   @Post('login')
   public async login (@Body() loginUserDto: LoginUserDto):
-  Promise<any> {
+  Promise<LoginStatus> {
     return await this.authService.login(loginUserDto)
   }
 }
